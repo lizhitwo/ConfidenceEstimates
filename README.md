@@ -39,6 +39,7 @@ ImageSets/  JPEGImages/
 Some subfolders may need some moving around, especially VOC and MSCOCO.
 
 # Usage: evaluation
+### For released models
 Use these commands to evaluate the released baseline models. 
 ```
 python evaluate.py lfwp_gender
@@ -55,8 +56,19 @@ python evaluate.py voc_to_coco  --calibrate
 ```
 The resulting values will be slightly different from the paper tables, because the tables are the average results of 10 runs for each experiment.
 
-Modify the `lookup` dictionary or use the `eval_dset` function to suit your own needs. 
+### For your own models
 The evaluation criteria are implemented in the `SafeProbsMC` and `SafeProbsML` classes in `conf_eval/utils.py`.
+```
+# For multi-class softmax logits (NxC shape) and enumerated ground truth (N shape):
+prob = SafeProbsMC.from_logits(logits)
+print(prob.dict_performance(gt))
+
+# For multi-label sigmoid logits (NxC shape) and multi-label binary ground truth (NxC shape):
+prob = SafeProbsML.from_logits(logits)
+print(prob.dict_performance(gt))
+```
+
+Alternatively, copy and modify the `lookup` dictionary or use the `eval_dset` function to suit your own needs. 
 
 # Usage: training
 Coming soon: code for baseline training and calibration. Implementation of other methods in the paper is available upon request.
