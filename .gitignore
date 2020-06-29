@@ -1,0 +1,9 @@
+*~
+.ipynb_checkpoints/
+*.ipynb
+*.npz
+.vimsession
+/trash
+__pycache__
+
+
