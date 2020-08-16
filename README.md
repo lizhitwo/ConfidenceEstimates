@@ -1,8 +1,8 @@
 This is the official implementation for the paper [Improving Confidence Estimates for Unfamiliar Examples](https://arxiv.org/abs/1804.03166) presented in CVPR 2020. See also the [project page](https://zhizhongli.vision/projects/improving-confidence-estimates).
 
-This repository currently provides evaluation of models on familiar and unfamiliar splits of the four datasets using the various metrics, as described in the paper. Baseline models and calibration parameters are also available.
+This repository provides evaluation of models on familiar and unfamiliar splits of the four datasets using the various metrics, as described in the paper. Baseline models and calibration parameters are also available.
 
-Training code with hyperparameters will be made available some time in the future.
+**Update:** Training code with hyperparameters is also available for single models, ensemble models, their calibrated versions, and performing calibration with the validation set.
 
 # Install
 1. Please use the following code for a conda installation of the dependencies with versions we tested on. This repository is made compatible with the newest PyTorch version v1.5.1. (It was originally developed under PyTorch r0.1.11)
