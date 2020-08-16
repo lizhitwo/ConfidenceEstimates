@@ -32,7 +32,7 @@ class Paths(object):
         for x in ['resnet18', 'resnet50', 'densenet161']:
             self.prePlaces365[x] = os.path.join(
                 self.pretrainedroot, 
-                'whole_%s_places365_python36.pth.tar' % (x.lower()),
+                '%s_places365.pth.tar' % (x.lower()),
             )
 
 

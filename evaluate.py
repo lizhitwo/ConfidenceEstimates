@@ -11,6 +11,7 @@ try:
     from tqdm.auto import tqdm
 except:
     from tqdm import tqdm
+import numpy as np
 import torch
 import torch.nn as nn
 from torchvision import datasets, models, transforms
@@ -129,13 +130,27 @@ def eval_dsetloader( model, dset_loader ):
     labels = torch.cat(labels_list)
     return logits, labels
 
-def main(dset_name, calibrate=False):
+def multiple_runs_evaulate( safe_pred_allruns, labels ):
+    '''Evaluate logits from multiple runs and averaging the performance.'''
+    res_allruns = [ x.dict_performance(labels.numpy()) for x in safe_pred_allruns ]
+    res = ezdict()
+    for k in res_allruns[0].keys():
+        res[k] = np.mean([ x[k] for x in res_allruns ])
+    return res
+
+def ensemble_runs_evaulate( safe_pred_allruns, labels ):
+    '''Evaluate ensemble performance by averaging probabilities from multiple ensemble members.'''
+    safe_pred_mean = type(safe_pred_allruns[0]).stack(safe_pred_allruns, axis=0).mean(axis=0)
+    return safe_pred_mean.dict_performance(labels.numpy())
+
+def main(dset_name, calibrate=False, model=None):
     '''Script to evaluate a released model on a dataset familiar / unfamiliar pair.
     calibrate: to use temperature scaling or not.
     '''
     # Load model
-    save_file = lookup.release_model_file[dset_name] # todo: wtf
-    model = load_model(dset_name, save_file)
+    if model is None:
+        save_file = lookup.release_model_file[dset_name] # todo: change to own
+        model = load_model(dset_name, save_file)
 
     # Evaluate on familiar split
     logits, labels = eval_dset( model, dset_name, familiar=True )

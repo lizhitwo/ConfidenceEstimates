@@ -341,6 +341,9 @@ class ImageNet(ImagePathsDataset):
         super(ImageNet, self).__init__(self.root, imgs, classes, None, transform, target_transform, loader)
 
 class VOC(ImagePathsDataset):
+    '''VOC dataset for multi-label existence classification.
+    !!!
+    WARNING: this dataset labels may contain -100 as ignored labels, which pytorch's binary_cross_entropy_with_logits cannot handle.'''
 
     def __init__(self, paths=None, train=True, split='val', transform=None, target_transform=None,
                  loader=default_loader):
@@ -408,7 +411,10 @@ class coco_anno2existence( object ):
 
 def CocoExistence( paths=None, train=True, split='val',
                    transform=None, target_transform=None, loader=default_loader ):
-    '''MSCOCO Dataset, but treat as multi-label problem to classify existence of classes'''
+    '''MSCOCO Dataset, but treat as multi-label problem to classify existence of classes.
+
+    !!!
+    WARNING: this dataset labels may contain -100 as ignored labels, which pytorch's binary_cross_entropy_with_logits cannot handle.'''
 
     paths = paths if paths is not None else default_paths
 

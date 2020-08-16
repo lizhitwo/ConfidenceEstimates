@@ -5,19 +5,17 @@ This repository currently provides evaluation of models on familiar and unfamili
 Training code with hyperparameters will be made available some time in the future.
 
 # Install
-Please use the following code for a conda installation of the dependencies with versions we tested on. This repository is made compatible with the newest PyTorch version v1.5.1. (It was originally developed under PyTorch r0.1.11)
-
+1. Please use the following code for a conda installation of the dependencies with versions we tested on. This repository is made compatible with the newest PyTorch version v1.5.1. (It was originally developed under PyTorch r0.1.11)
 ```
 conda create --name confeval \
     python=3 scipy=1.5.0 numpy=1.18.5 scikit-learn=0.23.1 h5py=2.10.0 \
     pycocotools=2.0.1 tqdm=4.46.1 easydict=1.9 pytorch=1.5.1 \
-    torchvision=0.6.1 cudatoolkit=10.2 \
+    torchvision=0.6.1 cudatoolkit=10.2 pytorch-lightning=0.8.4 \
     -c pytorch -c conda-forge -y
 conda activate confeval
 ```
-
-Please download datasets that you need (ImageNet, VOC 2012, COCO, Pets, LFW+) from respective sources. Please modify dataset paths in `conf_eval/paths.py` and make sure that the directory structure has at least these contents:
-
+2. Please download datasets that you need (ImageNet, VOC 2012, COCO, [Pets](https://www.robots.ox.ac.uk/~vgg/data/pets/), [LFW+](http://biometrics.cse.msu.edu/Publications/Databases/MSU_LFW+/)) from respective sources. 
+3. Please modify dataset paths in `conf_eval/paths.py` and make sure that the directory structure has at least these contents:
 ```
 $ ls path/to/root/{ILSVRC2012,VOC2012,MSCOCO,Oxford_IIIT_Pets,LFW+_Release} -p
 
@@ -36,7 +34,9 @@ annotations/  images/
 path/to/root/VOC2012:
 ImageSets/  JPEGImages/
 ```
-Some subfolders may need some moving around, especially VOC and MSCOCO.
+4. Some subfolders may need some moving around, especially VOC and MSCOCO.
+5. Finally, please copy `put_in_Pets_annotations/train.txt` and `put_in_Pets_annotations/val.txt` into `path/to/root/Oxford_IIIT_Pets/annotations/`. 
+
 
 # Usage: evaluation
 ### For released models
@@ -71,7 +71,40 @@ print(prob.dict_performance(gt))
 Alternatively, copy and modify the `lookup` dictionary or use the `eval_dset` function to suit your own needs. 
 
 # Usage: training
-Coming soon: code for baseline training and calibration. Implementation of other methods in the paper is available upon request.
+We provide code for training single or ensemble models and calibration with temperature scaling. Implementation of other methods in the paper is available upon request.
+
+Please make sure you have downloaded the [PyTorch Places365-pretrained models](https://github.com/CSAILVision/places365) to the `pretrained` folder under your dataset root:
+```
+$ ls path/to/root/pretrained -p
+densenet161_places365.pth.tar  resnet18_places365.pth.tar
+```
+The installation section has changed since the evaluation code release. Please double check that you have installed Pytorch-Lightning and copied the train/val split of the Pets dataset.
+
+Use these commands to train corresponding models:
+```
+# Set dataset name. Choices: lfwp_gender cat_vs_dog imnet_animal voc_to_coco
+DSET=lfwp_gender
+
+# Single model
+python train.py ${DSET} test
+# Single model (average performance over 10 runs)
+python train.py ${DSET} test --i_runs {0..9}
+
+# Single model with T-scaling calibration
+# Calibrate on validation split
+python train.py ${DSET} val --get_calibration
+# Run with temperature obtained above
+python train.py ${DSET} test --calibrate <temperature reported above>
+# Run with temperature obtained above (average performance over 10 runs)
+python train.py ${DSET} test --calibrate <temperature reported above> --i_runs {0..9}
+
+# Ensemble of 10 models from the 10 runs
+python train.py ${DSET} test --ensemble --i_runs {0..9}
+
+# Ensemble of 10 models from the 10 runs with T-scaling calibration
+python train.py ${DSET} test --ensemble --calibrate <temperature reported above> --i_runs {0..9}
+```
+The resulting values will be slightly different from the paper tables and provided calibration temperatures due to randomness in deep learning.
 
 # Citation
 If you use this repository or find any component useful, please consider citing our paper:

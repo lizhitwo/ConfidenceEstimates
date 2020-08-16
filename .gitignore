@@ -5,5 +5,6 @@
 .vimsession
 /trash
 __pycache__
+/trained_models/*
 
 
