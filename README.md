@@ -2,9 +2,9 @@ This is the official implementation for the paper [Improving Confidence Estimate
 
 This repository provides evaluation of models on familiar and unfamiliar splits of the four datasets using the various metrics, as described in the paper. Baseline models and calibration parameters are also available.
 
-**Update:** Training code with hyperparameters is also available for single models, ensemble models, and performing calibration with the validation set.
+:gift: **Update:** Training code with hyperparameters is also available for single models, ensemble models, and performing calibration with the validation set.
 
-:warning:ERRATA:warning:: The paper incorrectly states that we are using the Adam optimizer. We are in fact using SGD. 
+:warning: ERRATA :warning:: The paper incorrectly states that we are using the Adam optimizer. We are in fact using SGD. 
 
 # Install
 1. Please use the following code for a conda installation of the dependencies with versions we tested on. This repository is made compatible with the newest PyTorch version v1.5.1. (It was originally developed under PyTorch r0.1.11)
