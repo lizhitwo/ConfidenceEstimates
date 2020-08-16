@@ -4,6 +4,8 @@ This repository provides evaluation of models on familiar and unfamiliar splits 
 
 **Update:** Training code with hyperparameters is also available for single models, ensemble models, and performing calibration with the validation set.
 
+<span style="color:red">:warning:ERRATA:warning::</span> The paper incorrectly states that we are using the Adam optimizer. We are in fact using SGD. 
+
 # Install
 1. Please use the following code for a conda installation of the dependencies with versions we tested on. This repository is made compatible with the newest PyTorch version v1.5.1. (It was originally developed under PyTorch r0.1.11)
 ```
